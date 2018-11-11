@@ -15,36 +15,34 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JsoupCssSelectSnippet {
+public class App {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(JsoupCssSelectSnippet.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
 
     private static final String CHARSET_NAME = "utf8";
-    private static final String CSS_QUERY = "*[id=\"make-everything-ok-button\"]";
-    private static final int ALLOWED_SIMILARITY_PERCENT = 50;
+    private static final Integer ALLOWED_SIMILARITY_PERCENT = 50;
     private static final String PATH_ATTRIBUTE_KEY = "path";
     private static final String ID_ATTRIBUTE_KEY = "id";
     private static final String TAG_CONTENT_ATTRIBUTE_KEY = "tagContent";
 
     public static void main(String[] args) {
-        Elements originalElements = findElementsByQuery(new File(args[0]), CSS_QUERY);
+        String cssQuery = "*[id=\"" + args[2] + "\"]";
+
+        Elements originalElements = findElementsByQuery(new File(args[0]), cssQuery);
+        Map<String, String> originalElementsAttrs = getOriginalElementsAttrs(originalElements);
         String attrType = originalElements.get(0).nodeName();
+        removeNotAffectingComparisonElements(originalElementsAttrs);
+
         Elements sampleElements = findElementsByQuery(new File(args[1]), attrType);
+        List<Map<String, String>> sampleElementsAttrsList = generateMapWithAttributes(sampleElements);
 
-        Map<String, String> originalElementsAttrs = generateMapWithAttributes(originalElements).get(0);
-        List<Map<String, String>> sampleElementsAttrs = generateMapWithAttributes(sampleElements);
-
-        Map<String, String> resultList = generateResultList(originalElementsAttrs, sampleElementsAttrs);
-
-        LOGGER.info("Found " + resultList.size() + " element(s):");
-        resultList.forEach((k, v) -> LOGGER.info("path = " + k + ", similarity = " + v));
+        Map<String, String> resultList = generateResultList(originalElementsAttrs, sampleElementsAttrsList);
+        printResult(resultList);
     }
 
     private static Map<String, String> generateResultList(Map<String, String> originalElementsAttrs,
                                                           List<Map<String, String>> sampleElementsAttrs) {
         Map<String, String> resultList = new HashMap<>();
-        originalElementsAttrs.remove(PATH_ATTRIBUTE_KEY);
-        originalElementsAttrs.remove(ID_ATTRIBUTE_KEY);
         int elementsCount = originalElementsAttrs.size();
         for (Map<String, String> sampleElementsAttrsOpt : sampleElementsAttrs) {
             double similarityNumbers = 0;
@@ -75,6 +73,21 @@ public class JsoupCssSelectSnippet {
         return attributeValues;
     }
 
+    private static Map<String, String> getOriginalElementsAttrs(Elements originalElements) {
+        List<Map<String, String>> originalElementsAttrsList = generateMapWithAttributes(originalElements);
+        if (originalElementsAttrsList.size() > 0) {
+            return originalElementsAttrsList.get(0);
+        } else {
+            LOGGER.error("No item found with such ID");
+            throw new RuntimeException();
+        }
+    }
+
+    private static void removeNotAffectingComparisonElements(Map<String, String> originalElementsAttrs) {
+        originalElementsAttrs.remove(PATH_ATTRIBUTE_KEY);
+        originalElementsAttrs.remove(ID_ATTRIBUTE_KEY);
+    }
+
     private static Elements findElementsByQuery(File htmlFile, String cssQuery) {
         try {
             Document doc = Jsoup.parse(
@@ -86,5 +99,10 @@ public class JsoupCssSelectSnippet {
             LOGGER.error("Error reading [{}] file", htmlFile.getAbsolutePath(), e);
             throw new RuntimeException(e);
         }
+    }
+
+    private static void printResult(Map<String, String> resultList) {
+        LOGGER.info("Found " + resultList.size() + " element(s):");
+        resultList.forEach((k, v) -> LOGGER.info("path = " + k + ", similarity = " + v));
     }
 }

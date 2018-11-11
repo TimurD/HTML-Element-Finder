@@ -14,6 +14,8 @@ Default allowed similarity percent = 50%
 To build application do the following:
 
 ```
+git clone https://github.com/TimurD/HTML-Element-Finder.git
+cd HTML-Element-Finder/
 ./gradlew fatJar
 ```
 
@@ -29,7 +31,7 @@ where:
 <target_element_id> - id of target element;  
 <input_other_sample_file_path> - path to diff-case HTML file to search a similar element;
 
-##Output
+## Output
 
 Program prints count of similar elements, path to every element and percent of similarity.
 

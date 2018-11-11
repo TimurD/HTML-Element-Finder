@@ -1,4 +1,4 @@
-package com.agileengine;
+package com.tymurd.finder;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.agileengine.utils.PathCreator;
+import com.tymurd.finder.utils.PathCreator;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

@@ -1,4 +1,4 @@
-group 'com.agileengine'
+group 'com.tymurd.finder'
 version '0.0.1'
 
 apply plugin: 'java'
@@ -12,7 +12,7 @@ repositories {
 task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Version': version,
-                'Main-Class': 'com.agileengine.App'
+                'Main-Class': 'com.tymurd.finder.App'
     }
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

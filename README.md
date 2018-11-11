@@ -27,7 +27,7 @@ java -jar <your_bundled_app>.jar <input_origin_file_path> <input_other_sample_fi
 ```
 where:  
 <your_bundled_app> - "html-element-finder-all-0.0.1" from "build/libs";  
-<input_origin_file_path> - origin sample path to find the element with attribute id=<target_element_id> and collect all the required information;
+<input_origin_file_path> - origin sample path to find the element with attribute id=<target_element_id> and collect all the required information;  
 <target_element_id> - id of target element;  
 <input_other_sample_file_path> - path to diff-case HTML file to search a similar element;
 

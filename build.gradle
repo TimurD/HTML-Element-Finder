@@ -9,8 +9,18 @@ repositories {
     mavenCentral()
 }
 
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Version': version,
+                'Main-Class': 'com.agileengine.App'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 dependencies {
     compile 'org.jsoup:jsoup:1.11.2'
-
+    compile 'org.apache.commons:commons-lang3:3.0'
     compile 'org.slf4j:slf4j-log4j12:1.7.25'
 }

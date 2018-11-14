@@ -1,5 +1,6 @@
-package com.tymurd.finder.finder;
+package com.tymurd.finder.finders;
 
+import com.tymurd.finder.models.SimilarElement;
 import com.tymurd.finder.utils.PathCreator;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,7 +27,7 @@ public class HtmlElementFinder {
     private static final String TAG_CONTENT_ATTRIBUTE_KEY = "tagContent";
 
 
-    public Map<String, String> findSimilarElement(String originFile, String sampleFile, String targetId) {
+    public List<SimilarElement> findSimilarElement(String originFile, String sampleFile, String targetId) {
         String cssQuery = "*[id=\"" + targetId + "\"]";
 
         Elements originalElements = findElementsByQuery(new File(originFile), cssQuery);
@@ -40,9 +41,9 @@ public class HtmlElementFinder {
         return generateResultList(originalElementsAttrs, sampleElementsAttrsList);
     }
 
-    private Map<String, String> generateResultList(Map<String, String> originalElementsAttrs,
-                                                   List<Map<String, String>> sampleElementsAttrs) {
-        Map<String, Double> resultList = new HashMap<>();
+    private List<SimilarElement> generateResultList(Map<String, String> originalElementsAttrs,
+                                                    List<Map<String, String>> sampleElementsAttrs) {
+        List<SimilarElement> resultList = new ArrayList<>();
         int elementsCount = originalElementsAttrs.size();
         for (Map<String, String> sampleElementsAttrsOpt : sampleElementsAttrs) {
             double similarityNumbers = 0;
@@ -50,11 +51,11 @@ public class HtmlElementFinder {
                 if (entry.getValue().equals(sampleElementsAttrsOpt.get(entry.getKey()))) {
                     similarityNumbers++;
                 }
-                resultList.put(sampleElementsAttrsOpt.get(PATH_ATTRIBUTE_KEY), similarityNumbers / elementsCount * 100);
+                resultList.add(new SimilarElement(sampleElementsAttrsOpt.get(PATH_ATTRIBUTE_KEY),
+                        similarityNumbers / elementsCount * 100));
             }
         }
-        return resultList.entrySet().stream().filter(e -> e.getValue() > ALLOWED_SIMILARITY_PERCENT)
-                .collect(Collectors.toMap(Map.Entry::getKey, e -> String.format("%.2f%%", e.getValue())));
+        return resultList.stream().filter(e -> e.getSimilarityPercent() > ALLOWED_SIMILARITY_PERCENT).collect(Collectors.toList());
     }
 
     private List<Map<String, String>> generateMapWithAttributes(Elements elements) {

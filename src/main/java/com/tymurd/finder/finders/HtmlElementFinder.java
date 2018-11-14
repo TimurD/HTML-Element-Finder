@@ -1,7 +1,7 @@
 package com.tymurd.finder.finders;
 
 import com.tymurd.finder.models.SimilarElement;
-import com.tymurd.finder.utils.PathCreator;
+import com.tymurd.finder.utils.PathCreatorUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -68,7 +68,7 @@ public class HtmlElementFinder {
         {
             Map<String, String> stringifiedAttrs = new HashMap<>();
             stringifiedAttrs.put(TAG_CONTENT_ATTRIBUTE_KEY, buttons.text());
-            stringifiedAttrs.put(PATH_ATTRIBUTE_KEY, PathCreator.getPath(buttons));
+            stringifiedAttrs.put(PATH_ATTRIBUTE_KEY, PathCreatorUtil.getPath(buttons));
             buttons.attributes().asList().forEach(
                     attr -> stringifiedAttrs.put(attr.getKey(), attr.getValue()));
             attributeValues.add(stringifiedAttrs);

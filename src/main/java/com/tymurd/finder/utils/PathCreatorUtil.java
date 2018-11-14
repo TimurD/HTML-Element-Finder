@@ -3,9 +3,9 @@ package com.tymurd.finder.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 
-public final class PathCreator {
+public final class PathCreatorUtil {
 
-    private PathCreator() {
+    private PathCreatorUtil() {
     }
 
     private static final String CLASS_DELIMITER = ".";

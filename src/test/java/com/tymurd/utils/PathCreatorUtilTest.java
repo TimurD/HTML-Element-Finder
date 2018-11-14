@@ -1,13 +1,13 @@
 package com.tymurd.utils;
 
-import com.tymurd.finder.utils.PathCreator;
+import com.tymurd.finder.utils.PathCreatorUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class PathCreatorTest {
+public class PathCreatorUtilTest {
 
     private static final String TEST_PATH =
             "<div class=\"panel-body\">" +
@@ -21,6 +21,6 @@ public class PathCreatorTest {
     @Test
     public void pathGenerationTest() {
         Elements testPathElement = Jsoup.parse(TEST_PATH).select("a");
-        assertEquals(EXPECTED_RESULT, PathCreator.getPath(testPathElement.first()));
+        assertEquals(EXPECTED_RESULT, PathCreatorUtil.getPath(testPathElement.first()));
     }
 }

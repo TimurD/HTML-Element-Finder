@@ -18,6 +18,6 @@ public class App {
 
     private static void printResult(List<SimilarElement> resultList) {
         LOGGER.info(String.format("Found %d element(s):", resultList.size()));
-        resultList.forEach(System.out::println);
+        resultList.forEach(se -> LOGGER.info(se.toString()));
     }
 }

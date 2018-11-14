@@ -19,8 +19,11 @@ task fatJar(type: Jar) {
     with jar
 }
 
+fatJar.dependsOn.add(build)
+
 dependencies {
     compile 'org.jsoup:jsoup:1.11.2'
     compile 'org.apache.commons:commons-lang3:3.0'
     compile 'org.slf4j:slf4j-log4j12:1.7.25'
+    testCompile 'junit:junit:4.12'
 }

@@ -1,5 +1,7 @@
 package com.tymurd.finder.models;
 
+import java.util.Objects;
+
 public class SimilarElement {
 
     private String path;
@@ -29,5 +31,19 @@ public class SimilarElement {
     @Override
     public String toString() {
         return String.format("path = %s, similarity percent = %.2f%%", path, similarityPercent);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SimilarElement that = (SimilarElement) o;
+        return Objects.equals(path, that.path) &&
+                Objects.equals(similarityPercent, that.similarityPercent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, similarityPercent);
     }
 }

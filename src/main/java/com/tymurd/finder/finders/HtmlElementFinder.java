@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HtmlElementFinder {
@@ -26,7 +23,6 @@ public class HtmlElementFinder {
     private static final String ID_ATTRIBUTE_KEY = "id";
     private static final String TAG_CONTENT_ATTRIBUTE_KEY = "tagContent";
 
-
     public List<SimilarElement> findSimilarElement(String originFile, String sampleFile, String targetId) {
         String cssQuery = "*[id=\"" + targetId + "\"]";
 
@@ -38,24 +34,32 @@ public class HtmlElementFinder {
         Elements sampleElements = findElementsByQuery(new File(sampleFile), attrType);
         List<Map<String, String>> sampleElementsAttrsList = generateMapWithAttributes(sampleElements);
 
-        return generateResultList(originalElementsAttrs, sampleElementsAttrsList);
+        List<SimilarElement> similarElements =
+                generateSimilarElementsList(originalElementsAttrs, sampleElementsAttrsList);
+        return generateResultList(similarElements, originalElementsAttrs.size());
     }
 
-    private List<SimilarElement> generateResultList(Map<String, String> originalElementsAttrs,
-                                                    List<Map<String, String>> sampleElementsAttrs) {
-        List<SimilarElement> resultList = new ArrayList<>();
-        int elementsCount = originalElementsAttrs.size();
+    private List<SimilarElement> generateResultList(List<SimilarElement> similarElements, int elementsCount) {
+        return similarElements.stream()
+                .peek(se -> se.setSimilarityPercent(se.getSimilarityPercent() / elementsCount * 100))
+                .filter(e -> e.getSimilarityPercent() > ALLOWED_SIMILARITY_PERCENT)
+                .collect(Collectors.toList());
+
+    }
+
+    private List<SimilarElement> generateSimilarElementsList(Map<String, String> originalElementsAttrs,
+                                                             List<Map<String, String>> sampleElementsAttrs) {
+        List<SimilarElement> similarElements = new ArrayList<>();
         for (Map<String, String> sampleElementsAttrsOpt : sampleElementsAttrs) {
             double similarityNumbers = 0;
             for (Map.Entry<String, String> entry : originalElementsAttrs.entrySet()) {
                 if (entry.getValue().equals(sampleElementsAttrsOpt.get(entry.getKey()))) {
                     similarityNumbers++;
                 }
-                resultList.add(new SimilarElement(sampleElementsAttrsOpt.get(PATH_ATTRIBUTE_KEY),
-                        similarityNumbers / elementsCount * 100));
             }
+            similarElements.add(new SimilarElement(sampleElementsAttrsOpt.get(PATH_ATTRIBUTE_KEY), similarityNumbers));
         }
-        return resultList.stream().filter(e -> e.getSimilarityPercent() > ALLOWED_SIMILARITY_PERCENT).collect(Collectors.toList());
+        return similarElements;
     }
 
     private List<Map<String, String>> generateMapWithAttributes(Elements elements) {

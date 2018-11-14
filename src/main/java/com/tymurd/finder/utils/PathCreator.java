@@ -3,7 +3,10 @@ package com.tymurd.finder.utils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 
-public class PathCreator {
+public final class PathCreator {
+
+    private PathCreator() {
+    }
 
     private static final String CLASS_DELIMITER = ".";
     private static final String ID_DELIMITER = "#";
@@ -17,8 +20,8 @@ public class PathCreator {
             path.insert(0, element.nodeName() + getIdForTag(element.attr(ID_ATTRIBUTE_KEY)) +
                     getClassForTag(element.attr(CLASS_ATTRIBUTE_KEY)) + TAG_DELIMITER);
         }
-        path.append(button.nodeName()).append(getIdForTag(button.attr(ID_ATTRIBUTE_KEY) +
-                getClassForTag(button.attr(CLASS_ATTRIBUTE_KEY))));
+        path.append(button.nodeName()).append(getIdForTag(button.attr(ID_ATTRIBUTE_KEY)))
+                .append(getClassForTag(button.attr(CLASS_ATTRIBUTE_KEY)));
         return path.toString();
     }
 

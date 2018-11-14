@@ -18,8 +18,8 @@ public class HtmlElementFinderTest {
     private static final int EXPECTED_LIST_SIZE = 1;
     private static final Double EXPECTED_SIMILARITY_PERCENT = 80d;
     private static final String EXPECTED_PATH =
-            "html/body/div#wrapper/div#page-wrapper/div.row/div.col-lg-8/" +
-                    "div.panel panel-default/div.panel-body/a.btn btn-success";
+            "html/body/div#wrapper/div#page-wrapper/div.row/div.col-lg-8" +
+                    "/div.panel panel-default/div.panel-body/a.btn btn-success";
 
     @Test
     public void findSimilarElementsTest() {

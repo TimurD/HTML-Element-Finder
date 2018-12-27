@@ -2,10 +2,10 @@ package com.tymurd.finder.models;
 
 import java.util.Objects;
 
-public class SimilarElement {
+public final class SimilarElement {
 
-    private String path;
-    private Double similarityPercent;
+    private final String path;
+    private final Double similarityPercent;
 
     public SimilarElement(String path, Double similarityPercent) {
         this.path = path;
@@ -16,16 +16,8 @@ public class SimilarElement {
         return path;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     public Double getSimilarityPercent() {
         return similarityPercent;
-    }
-
-    public void setSimilarityPercent(Double similarityPercent) {
-        this.similarityPercent = similarityPercent;
     }
 
     @Override

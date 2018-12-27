@@ -35,20 +35,19 @@ public class HtmlElementFinder {
         List<Map<String, String>> sampleElementsAttrsList = generateMapWithAttributes(sampleElements);
 
         List<SimilarElement> similarElements =
-                generateSimilarElementsList(originalElementsAttrs, sampleElementsAttrsList);
-        return generateResultList(similarElements, originalElementsAttrs.size());
+                generateSimilarElementsList(originalElementsAttrs, sampleElementsAttrsList, originalElementsAttrs.size());
+        return generateResultList(similarElements);
     }
 
-    private List<SimilarElement> generateResultList(List<SimilarElement> similarElements, int elementsCount) {
+    private List<SimilarElement> generateResultList(List<SimilarElement> similarElements) {
         return similarElements.stream()
-                .peek(se -> se.setSimilarityPercent(se.getSimilarityPercent() / elementsCount * 100))
                 .filter(e -> e.getSimilarityPercent() > ALLOWED_SIMILARITY_PERCENT)
                 .collect(Collectors.toList());
 
     }
 
     private List<SimilarElement> generateSimilarElementsList(Map<String, String> originalElementsAttrs,
-                                                             List<Map<String, String>> sampleElementsAttrs) {
+                                                             List<Map<String, String>> sampleElementsAttrs, int elementsCount) {
         List<SimilarElement> similarElements = new ArrayList<>();
         for (Map<String, String> sampleElementsAttrsOpt : sampleElementsAttrs) {
             double similarityNumbers = 0;
@@ -57,7 +56,8 @@ public class HtmlElementFinder {
                     similarityNumbers++;
                 }
             }
-            similarElements.add(new SimilarElement(sampleElementsAttrsOpt.get(PATH_ATTRIBUTE_KEY), similarityNumbers));
+            similarElements.add(new SimilarElement(sampleElementsAttrsOpt.get(PATH_ATTRIBUTE_KEY),
+                    similarityNumbers / elementsCount * 100));
         }
         return similarElements;
     }
